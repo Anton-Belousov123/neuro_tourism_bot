@@ -52,7 +52,7 @@ def main():
     answer = ''
     is_answer_correct = False
     if '?' in text_translated:
-        answer += 'Это ответ на вопрос от пользователя от сервиса UseFini!'  # тут запрос к usefini
+        answer += usefini.ask_question(text_translated)
 
     if order_info == 1 or dk_status:
         is_answer_correct = True
