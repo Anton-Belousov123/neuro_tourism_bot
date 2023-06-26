@@ -50,6 +50,7 @@ def main():
     _, text_translated = deepl.translate_it(text, 'EN')
     dk_status = get_simantic_status('dk.txt', text_translated)
     answer = ''
+    print(text_translated, dk_status)
     is_answer_correct = False
     if '?' in text_translated:
         answer += usefini.ask_question(text_translated)

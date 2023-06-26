@@ -78,7 +78,6 @@ def get_chat_history(receiver_id, token='', chat_history=""):
         if '/restart' in i['text']:
             break
         texts += f'\n\n{i["text"]}'
-    print(texts)
     return texts.strip()
 
 def send_notes(pipeline_id, session, text):
