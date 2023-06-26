@@ -17,3 +17,11 @@ def plus_one(chat_id):
     with open(file='database.json', mode='w', encoding='UTF-8') as f:
         f.write(json.dumps(db))
     f.close()
+
+
+def restart(chat_id):
+    db = json.load(open(file='database.json', mode='r', encoding='UTF-8'))
+    db.pop(chat_id)
+    with open(file='database.json', mode='w', encoding='UTF-8') as f:
+        f.write(json.dumps(db))
+    f.close()

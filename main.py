@@ -29,11 +29,15 @@ def get_simantic_status(mode, text):
 def main():
     request_dict = request.form.to_dict()
     name, text, image = request_dict['message[add][0][author][name]'], request_dict['message[add][0][text]'], ''
+
     if 'message[add][0][author][avatar_url]' in request_dict.keys():
         image = request_dict['message[add][0][author][avatar_url]']
     pipeline = amocrm.get_pipeline(image, name, text)
     if pipeline is None: return 'ok'
     chat_id = request_dict['message[add][0][chat_id]']
+    if text == '/restart':
+        db.restart()
+        return 'ok'
     source_language, text_translated = deepl.translate_it(text, 'EN')
     if int(request_dict['message[add][0][created_at]']) + 10 < int(time.time()): return 'ok'
     token, session = amocrm.get_token()
