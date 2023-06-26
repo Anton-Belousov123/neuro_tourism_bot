@@ -55,8 +55,6 @@ def main():
         answer += usefini.ask_question(text_translated)
 
     if order_info == 1 or dk_status:
-        if dk_status:
-            answer += '\n\n' + messages_to_user['dk']
         is_answer_correct = True
 
 
@@ -83,6 +81,7 @@ def main():
         answer += '\n\n' + messages_to_user[order_info]
 
     else:
+        answer += '\n\n' + messages_to_user['dk']
         answer += '\n\n' + messages_to_user[order_info - 1]
 
 
