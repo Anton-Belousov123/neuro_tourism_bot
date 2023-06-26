@@ -73,7 +73,8 @@ def get_chat_history(receiver_id, token='', chat_history=""):
             token, session = get_token()
             continue
         break
-    print(chat_history)
+    print(chat_history[0].keys())
+    print(chat_history[0])
     return chat_history
 
 def send_notes(pipeline_id, session, text):

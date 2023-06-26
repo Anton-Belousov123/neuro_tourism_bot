@@ -7,7 +7,7 @@ import dotenv
 import amocrm
 import db
 import deepl
-import google
+import ggl
 import usefini
 
 app = Flask(__name__)
@@ -36,7 +36,7 @@ def main():
     if pipeline is None: return 'ok'
     chat_id = request_dict['message[add][0][chat_id]']
     if text == '/restart':
-        db.restart()
+        db.restart(chat_id)
         return 'ok'
     source_language, text_translated = deepl.translate_it(text, 'EN')
     if int(request_dict['message[add][0][created_at]']) + 10 < int(time.time()): return 'ok'
@@ -45,7 +45,7 @@ def main():
     amocrm.send_notes(pipeline, session, translation_notes)
     chat_history = amocrm.get_chat_history(chat_id)
     order_info = db.get_order_info(chat_id)
-    messages_to_user = google.get_messages()
+    messages_to_user = ggl.get_messages()
     dk_status = get_simantic_status('dk.txt', text_translated)
     answer = ''
     is_answer_correct = False
