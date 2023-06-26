@@ -74,7 +74,8 @@ def get_chat_history(receiver_id, token='', chat_history=""):
             continue
         break
     texts = ''
-    for i in chat_history[0]:
+    for i in chat_history:
+        print(i)
         if '/restart' in i['text']:
             break
         texts += f'\n\n{i["text"]}'
