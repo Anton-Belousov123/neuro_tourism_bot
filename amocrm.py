@@ -75,6 +75,8 @@ def get_chat_history(receiver_id, token='', chat_history=""):
         break
     texts = ''
     for i in chat_history[0]:
+        if '/restart' in i['text']:
+            break
         texts += f'\n\n{i["text"]}'
     return texts.strip()
 
