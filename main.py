@@ -19,9 +19,7 @@ def get_simantic_status(mode, text):
     info = open(mode).read().split('\n')
     for s1 in text.split():
         for s2 in info:
-            matcher = difflib.SequenceMatcher(None, s1.lower(), s2.lower())
-            print(matcher)
-            if matcher.ratio() >= 0.8:
+            if s1.lower() == s2.lower() or text.lower() == s2.lower():
                 return True
     return False
 
