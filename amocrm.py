@@ -73,9 +73,10 @@ def get_chat_history(receiver_id, token='', chat_history=""):
             token, session = get_token()
             continue
         break
-    print(chat_history[0].keys())
-    print(chat_history[0])
-    return chat_history
+    texts = ''
+    for i in chat_history[0]:
+        texts += f'\n\n{i["text"]}'
+    return texts.strip()
 
 def send_notes(pipeline_id, session, text):
     url = f'https://kevgenev8.amocrm.ru/private/notes/edit2.php?parent_element_id={pipeline_id}&parent_element_type=2'

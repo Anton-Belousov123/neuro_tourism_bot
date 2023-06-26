@@ -11,7 +11,7 @@ import ggl
 import usefini
 
 app = Flask(__name__)
-dont_know_words = open('dont_know.txt', 'r').read().split('\n')
+dont_know_words = open('dk.txt', 'r').read().split('\n')
 dotenv.load_dotenv()
 
 
@@ -38,7 +38,7 @@ def main():
     if text == '/restart':
         db.restart(chat_id)
         return 'ok'
-    source_language, text_translated = deepl.translate_it(text, 'EN')
+
     if int(request_dict['message[add][0][created_at]']) + 10 < int(time.time()): return 'ok'
     token, session = amocrm.get_token()
     _, translation_notes = deepl.translate_it(text, 'RU')
@@ -46,6 +46,8 @@ def main():
     chat_history = amocrm.get_chat_history(chat_id)
     order_info = db.get_order_info(chat_id)
     messages_to_user = ggl.get_messages()
+    source_language, _ = deepl.translate_it(chat_history, 'EN')
+    _, text_translated = deepl.translate_it(text, 'EN')
     dk_status = get_simantic_status('dk.txt', text_translated)
     answer = ''
     is_answer_correct = False
