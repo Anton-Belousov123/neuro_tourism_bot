@@ -61,7 +61,7 @@ def get_status(text):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages = [
-        {"role": "system", "content": 'You need to say me is words in phrase from assistant are synonyms of finished apartment or under construction' },
+        {"role": "system", "content": 'You must tell me if the phrase contains at least one of these words from the assistant, which are synonymous with completed or under construction or in progress' },
         {"role": "system", "content": "You need to give me one answer from this: Yes or No"},
         {"role": "assistant", "content": text}]
     )
