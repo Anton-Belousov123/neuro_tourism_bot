@@ -86,8 +86,9 @@ def main():
         answer += '\n\n' + messages_to_user['dk']
         answer += '\n\n' + messages_to_user[order_info - 1]
 
-
+    print(answer)
     translated_to_user = deepl.translate_it2(answer.strip(), source_language)
+    print(translated_to_user)
     amocrm.send_message(chat_id, translated_to_user)
     token, session = amocrm.get_token()
     translation_notes = deepl.translate_it2(translated_to_user, 'Переведи на русский: ')
