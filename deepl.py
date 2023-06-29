@@ -52,3 +52,17 @@ def what_is_the_language(text, task):
         {"role": "assistant", "content": text}]
     )
     return response['choices'][0]['message']['content']
+
+
+def get_status(text):
+
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages = [
+        {"role": "system", "content": 'You need to say me is words in phrase from assistant are synonyms of finished apartment or under construction' },
+        {"role": "system", "content": "You need to give me one answer from this: Yes or No"},
+        {"role": "assistant", "content": text}]
+    )
+    return response['choices'][0]['message']['content']

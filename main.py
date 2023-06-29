@@ -53,7 +53,7 @@ def main():
     answer = ''
     print(text_translated, dk_status)
     is_answer_correct = False
-    if '?' in text_translated:
+    if '?' in text:
         answer += usefini.ask_question(text_translated)
 
     if order_info == 1 or dk_status:
@@ -68,9 +68,8 @@ def main():
 
 
     elif order_info == 3:
-        if get_simantic_status('build_status.txt', text_translated):
+        if 'yes' in deepl.get_status(text).lower():
             is_answer_correct = True
-
 
     elif order_info == 4:
         for word in text.split():
