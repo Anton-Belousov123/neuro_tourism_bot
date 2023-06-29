@@ -90,6 +90,7 @@ def main():
     token, session = amocrm.get_token()
     translation_notes = deepl.translate_it2(translated_to_user, 'Переведи на русский: ')
     amocrm.send_notes(pipeline, session, translation_notes)
+    return 'ok'
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8000)
