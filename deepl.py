@@ -30,6 +30,7 @@ def translate_it2(text: str, command: str):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages = [
+        {"role": "system", "content": 'You in role translator. Your task is only to translate provided message by assistant' },
         {"role": "system", "content": command},
         {"role": "assistant", "content": text}]
     )
