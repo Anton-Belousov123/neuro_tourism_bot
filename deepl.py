@@ -1,6 +1,10 @@
 import requests
 import os
 
+import os
+import openai
+import dotenv
+
 headers = {
     'Host': 'api.deepl.com',
     'Authorization': f'DeepL-Auth-Key {os.getenv("DEEPL_API_KEY")}',
@@ -8,6 +12,7 @@ headers = {
                   'Chrome/114.0.0.0 Safari/537.36',
     'Content-Type': 'application/x-www-form-urlencoded'
 }
+dotenv.load_dotenv()
 
 
 def translate_it(text: str, lang: str):
@@ -16,5 +21,20 @@ def translate_it(text: str, lang: str):
         headers=headers,
         data={'text': text, 'target_lang': lang}).json()
     return response['translations'][0]['detected_source_language'], response['translations'][0]['text'].lower().strip()
+
+
+def translate_it2(text: str, command: str):
+
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages = [
+        {"role": "system", "content": command},
+        {"role": "system", "content": text}]
+    )
+    return response['choices'][0]['message']['content']
+
+
 
 

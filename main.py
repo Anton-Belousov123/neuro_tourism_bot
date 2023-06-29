@@ -40,13 +40,13 @@ def main():
 
     if int(request_dict['message[add][0][created_at]']) + 10 < int(time.time()): return 'ok'
     token, session = amocrm.get_token()
-    _, translation_notes = deepl.translate_it(text, 'RU')
+    translation_notes = deepl.translate_it2(text, 'Переведи на русский: ')
     amocrm.send_notes(pipeline, session, translation_notes)
     chat_history = amocrm.get_chat_history(chat_id)
     order_info = db.get_order_info(chat_id)
     messages_to_user = ggl.get_messages()
-    source_language, _ = deepl.translate_it(chat_history, 'EN')
-    _, text_translated = deepl.translate_it(text, 'EN')
+    source_language = deepl.translate_it2(chat_history, 'WRITE ONLY ONE WORD. What is the language: ')
+    text_translated = deepl.translate_it2(text, 'Translate to English: ')
     dk_status = get_simantic_status('dk.txt', text_translated)
     answer = ''
     print(text_translated, dk_status)
@@ -85,10 +85,10 @@ def main():
         answer += '\n\n' + messages_to_user[order_info - 1]
 
 
-    _, translated_to_user = deepl.translate_it(answer.strip(), source_language)
+    translated_to_user = deepl.translate_it2(answer.strip(), source_language)
     amocrm.send_message(chat_id, translated_to_user)
     token, session = amocrm.get_token()
-    _, translation_notes = deepl.translate_it(translated_to_user, 'RU')
+    translation_notes = deepl.translate_it2(translated_to_user, 'Переведи на русский: ')
     amocrm.send_notes(pipeline, session, translation_notes)
 
 if __name__ == '__main__':
