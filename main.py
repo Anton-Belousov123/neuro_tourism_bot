@@ -40,7 +40,7 @@ def main():
 
     if int(request_dict['message[add][0][created_at]']) + 10 < int(time.time()): return 'ok'
     token, session = amocrm.get_token()
-    translation_notes = deepl.translate_it2(text, 'Переведи на русский: ')
+    translation_notes = deepl.translate_it2(text, 'Translate to Russian: ')
     print(translation_notes)
     amocrm.send_notes(pipeline, session, translation_notes)
     chat_history = amocrm.get_chat_history(chat_id)
@@ -91,7 +91,7 @@ def main():
     print(translated_to_user)
     amocrm.send_message(chat_id, translated_to_user)
     token, session = amocrm.get_token()
-    translation_notes = deepl.translate_it2(translated_to_user, 'Переведи на русский: ')
+    translation_notes = deepl.translate_it2(translated_to_user, 'Translate to Russian: ')
     amocrm.send_notes(pipeline, session, translation_notes)
     return 'ok'
 
