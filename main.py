@@ -61,7 +61,7 @@ def main():
 
 
     elif order_info == 2:
-        for word in text_translated.split():
+        for word in text.split():
 
             if str(word).isdigit() and len(word) == 1:
                 is_answer_correct = True
@@ -73,7 +73,7 @@ def main():
 
 
     elif order_info == 4:
-        for word in text_translated.split():
+        for word in text.split():
             if str(word).isdigit():
                 is_answer_correct = True
 # incorrect работает блок определения языка
