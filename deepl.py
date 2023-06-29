@@ -31,7 +31,7 @@ def translate_it2(text: str, command: str):
         model="gpt-3.5-turbo",
         messages = [
         {"role": "system", "content": command},
-        {"role": "system", "content": text}]
+        {"role": "user", "content": text}]
     )
     return response['choices'][0]['message']['content']
 
