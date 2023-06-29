@@ -41,12 +41,14 @@ def main():
     if int(request_dict['message[add][0][created_at]']) + 10 < int(time.time()): return 'ok'
     token, session = amocrm.get_token()
     translation_notes = deepl.translate_it2(text, 'Переведи на русский: ')
+    print(translation_notes)
     amocrm.send_notes(pipeline, session, translation_notes)
     chat_history = amocrm.get_chat_history(chat_id)
     order_info = db.get_order_info(chat_id)
     messages_to_user = ggl.get_messages()
     source_language = deepl.translate_it2(chat_history, 'WRITE ONLY ONE WORD. What is the language: ')
     text_translated = deepl.translate_it2(text, 'Translate to English: ')
+    print(source_language)
     dk_status = get_simantic_status('dk.txt', text_translated)
     answer = ''
     print(text_translated, dk_status)
