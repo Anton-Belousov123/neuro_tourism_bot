@@ -38,4 +38,17 @@ def translate_it2(text: str, command: str):
 
 
 
+def what_is_the_language(text, task):
 
+
+
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages = [
+        {"role": "system", "content": 'You in role is to give me the language name of the text that provided my assistant' },
+        {"role": "system", "content": task},
+        {"role": "assistant", "content": text}]
+    )
+    return response['choices'][0]['message']['content']
