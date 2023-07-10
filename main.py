@@ -36,8 +36,8 @@ def main():
 
     messages = [{"role": "system", "content": ggl.get_annotation()}]
     pipeline = amo.get_pipeline(image, name, text)
-    if pipeline is None: return 'ok'
     print('Pipeline:', pipeline, 'ChatId:', user_id)
+    if pipeline is None: return 'ok'
     if text == '/restart':
         db.clear_history(user_id)
         return 'ok'
