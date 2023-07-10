@@ -58,3 +58,8 @@ def main():
     amo.send_message(user_id, response)
     token, session = amo.get_token()
     amo.send_notes(pipeline, session, translate_to_russian(response))
+
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', debug=True, port=8000)
