@@ -34,12 +34,14 @@ def get_token():
         refresh_token = response.cookies.get('refresh_token')
         headers['access_token'], headers['refresh_token'] = access_token, refresh_token
         payload = {'request[chats][session][action]': 'create'}
+        headers['Host'] = 'chatgpt.amocrm.ru'
         response = session.post('https://kevgenev8.amocrm.ru/ajax/v1/chats/session', headers=headers, data=payload)
         token = response.json()['response']['chats']['session']['access_token']
-    except:
+    except Exception as e:
+        print(e)
         time.sleep(3)
         return get_token()
-    print('New token:', token)
+    print('Amo Token:', token)
     return token, session
 
 def get_pipeline(image, s_name, text):
