@@ -1,3 +1,5 @@
+import time
+
 import openai
 import os
 import dotenv
@@ -33,11 +35,13 @@ def main():
     user_id = request_dict['message[add][0][chat_id]']
     if 'message[add][0][author][avatar_url]' in request_dict.keys():
         image = request_dict['message[add][0][author][avatar_url]']
+    if int(request_dict['message[add][0][created_at]']) + 10 < int(time.time()): return 'ok'
 
     messages = [{"role": "system", "content": ggl.get_annotation()}]
     pipeline = amo.get_pipeline(image, name, text)
     print('Pipeline:', pipeline, 'ChatId:', user_id)
     if pipeline is None: return 'ok'
+
     if text == '/restart':
         db.clear_history(user_id)
         return 'ok'
