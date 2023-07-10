@@ -1,8 +1,10 @@
 import json
 import os
 import time
-import requests
+
 import bs4
+import requests
+
 
 def get_token():
     try:
@@ -40,8 +42,6 @@ def get_token():
     print('New token:', token)
     return token, session
 
-
-
 def get_pipeline(image, s_name, text):
     token, session = get_token()
     url = 'https://kevgenev8.amocrm.ru/leads/pipeline/6731170/?skip_filter=Y'
@@ -59,27 +59,6 @@ def get_pipeline(image, s_name, text):
             return pipeline
     return None
 
-
-def get_chat_history(receiver_id, token='', chat_history=""):
-    while True:
-        try:
-            headers = {'X-Auth-Token': token}
-            url = f'https://amojo.amocrm.ru/messages/{os.getenv("ACCOUNT_CHAT_ID")}/merge?stand=v15' \
-                  f'&offset=0&limit=100&chat_id%5B%5D={receiver_id}&get_tags=true&lang=ru'
-            chat_history = requests.get(url, headers=headers).json()['message_list']
-
-        except Exception as e:
-            print(e, 1)
-            token, session = get_token()
-            continue
-        break
-    texts = ''
-    for i in chat_history:
-        if '/restart' in i['text']:
-            break
-        texts += f'\n\n{i["text"]}'
-    return texts.strip()
-
 def send_notes(pipeline_id, session, text):
     url = f'https://kevgenev8.amocrm.ru/private/notes/edit2.php?parent_element_id={pipeline_id}&parent_element_type=2'
     data = {
@@ -90,7 +69,6 @@ def send_notes(pipeline_id, session, text):
         'ELEMENT_TYPE': '2'
     }
     resp = session.post(url, data=data)
-
 
 
 
@@ -109,4 +87,3 @@ def send_message(receiver_id: str, message: str, token=''):
             token, session = get_token()
             continue
         break
-

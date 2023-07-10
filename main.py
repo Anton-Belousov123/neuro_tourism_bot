@@ -1,27 +1,28 @@
-import difflib
-import time
-
-from flask import Flask, request
+import openai
+import os
 import dotenv
+from flask import Flask, request
 
-import amocrm
-import db
-import deepl
 import ggl
-import usefini
+import db
+import amo
+
+dotenv.load_dotenv()
+openai.api_key = os.getenv('OPENAI_API_KEY')
 
 app = Flask(__name__)
-dont_know_words = open('dk.txt', 'r').read().split('\n')
-dotenv.load_dotenv()
 
 
-def get_simantic_status(mode, text):
-    info = open(mode).read().split('\n')
-    for s1 in text.split():
-        for s2 in info:
-            if s1.lower() == s2.lower() or text.lower() in s2.lower() or s2.lower() in text.lower():
-                return True
-    return False
+def translate_to_russian(text):
+    messages = [
+        {'role': 'assistant', 'content': "Переведи текст на русский язык"},
+        {'role': 'user', 'content': text}
+    ]
+    response = openai.ChatCompletion.create(
+        model='gpt-3.5-turbo',
+        messages=messages
+    )['choices'][0]['message']['content']
+    return response
 
 
 @app.route('/', methods=["POST"])
@@ -29,70 +30,31 @@ def main():
     request_dict = request.form.to_dict()
     name, text, image = request_dict['message[add][0][author][name]'], request_dict['message[add][0][text]'], ''
 
+    user_id = request_dict['message[add][0][chat_id]']
     if 'message[add][0][author][avatar_url]' in request_dict.keys():
         image = request_dict['message[add][0][author][avatar_url]']
-    pipeline = amocrm.get_pipeline(image, name, text)
+
+    messages = [{"role": "system", "content": ggl.get_annotation()}]
+    pipeline = amo.get_pipeline(image, name, text)
     if pipeline is None: return 'ok'
-    chat_id = request_dict['message[add][0][chat_id]']
+
     if text == '/restart':
-        db.restart(chat_id)
+        db.clear_history(user_id)
         return 'ok'
 
-    if int(request_dict['message[add][0][created_at]']) + 10 < int(time.time()): return 'ok'
-    token, session = amocrm.get_token()
-    translation_notes = deepl.translate_it2(text, 'Translate to Russian: ')
-    print("Запрос на русском:", translation_notes)
-    amocrm.send_notes(pipeline, session, translation_notes)
-    chat_history = amocrm.get_chat_history(chat_id)
-    order_info = db.get_order_info(chat_id)
-    messages_to_user = ggl.get_messages()
-    source_language = deepl.what_is_the_language(chat_history, 'WRITE ONLY ONE WORD. What is the language: ')
-    text_translated = deepl.translate_it2(text, 'Translate to English: ')
-    print("Исходный язык:", source_language)
-    dk_status = get_simantic_status('dk.txt', text_translated)
-    answer = ''
-    print(text_translated, dk_status)
-    is_answer_correct = False
-    if '?' in text:
-        answer += usefini.ask_question(text_translated)
+    db.add_message(user_id, text, 'user')
 
-    if order_info == 1 or dk_status:
-        is_answer_correct = True
+    token, session = amo.get_token()
+    amo.send_notes(pipeline, session, translate_to_russian(text))
 
+    messages += db.read_history(user_id)
 
-    elif order_info == 2:
-        for word in text.split():
+    response = openai.ChatCompletion.create(
+        model='gpt-3.5-turbo',
+        messages=messages
+    )['choices'][0]['message']['content']
 
-            if str(word).isdigit() and len(word) == 1:
-                is_answer_correct = True
-
-
-    elif order_info == 3:
-        if 'yes' in deepl.get_status(text).lower():
-            is_answer_correct = True
-
-    elif order_info == 4:
-        for word in text.split():
-            if str(word).isdigit():
-                is_answer_correct = True
-# incorrect работает блок определения языка
-
-    if is_answer_correct:
-        db.plus_one(chat_id)
-        answer += '\n\n' + messages_to_user[order_info]
-
-    else:
-        answer += '\n\n' + messages_to_user['dk']
-        answer += '\n\n' + messages_to_user[order_info - 1]
-
-    print(answer)
-    translated_to_user = deepl.translate_it2(answer.strip(), source_language)
-    print(translated_to_user)
-    amocrm.send_message(chat_id, translated_to_user)
-    token, session = amocrm.get_token()
-    translation_notes = deepl.translate_it2(translated_to_user, 'Translate to Russian: ')
-    amocrm.send_notes(pipeline, session, translation_notes)
-    return 'ok'
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True, port=8000)
+    db.add_message(user_id, response, 'assistant')
+    amo.send_message(user_id, response)
+    token, session = amo.get_token()
+    amo.send_notes(pipeline, session, translate_to_russian(response))

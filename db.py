@@ -1,27 +1,25 @@
 import json
 
-def get_order_info(chat_id):
-    db = json.load(open(file='database.json', mode='r', encoding='UTF-8'))
-    if chat_id not in db.keys():
-        db[chat_id] = 1
-        with open(file='database.json', mode='w', encoding='UTF-8') as f:
-            f.write(json.dumps(db))
-        f.close()
-    return db[chat_id]
 
-
-
-def plus_one(chat_id):
-    db = json.load(open(file='database.json', mode='r', encoding='UTF-8'))
-    db[chat_id] += 1
-    with open(file='database.json', mode='w', encoding='UTF-8') as f:
-        f.write(json.dumps(db))
+def clear_history(id: str):
+    content = json.load(open('db.json', mode='r', encoding='UTF-8'))
+    content.pop(id)
+    with open('db.json', mode='w', encoding='UTF-8') as f:
+        f.write(json.dumps(content))
     f.close()
 
 
-def restart(chat_id):
-    db = json.load(open(file='database.json', mode='r', encoding='UTF-8'))
-    db.pop(chat_id)
-    with open(file='database.json', mode='w', encoding='UTF-8') as f:
-        f.write(json.dumps(db))
+def add_message(id: str, message: str, role: str):
+    content = json.load(open('db.json', mode='r', encoding='UTF-8'))
+    if id not in content.keys():
+        content[id] = []
+    content[id].append({'role': role, 'content': message})
+    with open('db.json', mode='w', encoding='UTF-8') as f:
+        f.write(json.dumps(content))
     f.close()
+
+
+def read_history(id: str):
+    return json.load(open('db.json', mode='r', encoding='UTF-8'))[id]
+
+
