@@ -46,7 +46,7 @@ def get_token():
 
 def get_pipeline(image, s_name, text):
     token, session = get_token()
-    url = 'https://kevgenev8.amocrm.ru/leads/pipeline/6731170/?skip_filter=Y'
+    url = 'https://chatgpt.amocrm.ru/leads/pipeline/6731170/?skip_filter=Y'
 
     response = session.get(url, timeout=15)
     soup = bs4.BeautifulSoup(response.text, features='html.parser')
