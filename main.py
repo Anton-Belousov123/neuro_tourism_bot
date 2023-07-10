@@ -29,7 +29,7 @@ def translate_to_russian(text):
 def main():
     request_dict = request.form.to_dict()
     name, text, image = request_dict['message[add][0][author][name]'], request_dict['message[add][0][text]'], ''
-    print('Question:', text)
+    print('Q:', text)
     user_id = request_dict['message[add][0][chat_id]']
     if 'message[add][0][author][avatar_url]' in request_dict.keys():
         image = request_dict['message[add][0][author][avatar_url]']
