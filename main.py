@@ -29,7 +29,7 @@ def translate_to_russian(text):
 def main():
     request_dict = request.form.to_dict()
     name, text, image = request_dict['message[add][0][author][name]'], request_dict['message[add][0][text]'], ''
-
+    print('Question:', text)
     user_id = request_dict['message[add][0][chat_id]']
     if 'message[add][0][author][avatar_url]' in request_dict.keys():
         image = request_dict['message[add][0][author][avatar_url]']
@@ -37,7 +37,7 @@ def main():
     messages = [{"role": "system", "content": ggl.get_annotation()}]
     pipeline = amo.get_pipeline(image, name, text)
     if pipeline is None: return 'ok'
-
+    print('Pipeline:', pipeline, 'ChatId:', user_id)
     if text == '/restart':
         db.clear_history(user_id)
         return 'ok'
@@ -45,8 +45,9 @@ def main():
     db.add_message(user_id, text, 'user')
 
     token, session = amo.get_token()
-    amo.send_notes(pipeline, session, translate_to_russian(text))
-
+    translation = translate_to_russian(text)
+    amo.send_notes(pipeline, session, translation)
+    print('Q_T:', translation)
     messages += db.read_history(user_id)
 
     response = openai.ChatCompletion.create(
@@ -57,9 +58,11 @@ def main():
     db.add_message(user_id, response, 'assistant')
     amo.send_message(user_id, response)
     token, session = amo.get_token()
-    amo.send_notes(pipeline, session, translate_to_russian(response))
-
-
+    print('A:', response)
+    translation = translate_to_russian(response)
+    amo.send_notes(pipeline, session, translation)
+    print('A_T:', translation)
+    return 'ok'
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8000)
