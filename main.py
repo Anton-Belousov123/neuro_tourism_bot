@@ -5,7 +5,7 @@ import os
 import dotenv
 from flask import Flask, request
 
-import ggl
+import misc
 import db
 import amo
 
@@ -15,16 +15,6 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 app = Flask(__name__)
 
 
-def translate_to_russian(text):
-    messages = [
-        {'role': 'assistant', 'content': "Переведи текст на русский язык"},
-        {'role': 'user', 'content': text}
-    ]
-    response = openai.ChatCompletion.create(
-        model='gpt-3.5-turbo',
-        messages=messages
-    )['choices'][0]['message']['content']
-    return response
 
 
 @app.route('/', methods=["POST"])
@@ -35,9 +25,11 @@ def main():
     user_id = request_dict['message[add][0][chat_id]']
     if 'message[add][0][author][avatar_url]' in request_dict.keys():
         image = request_dict['message[add][0][author][avatar_url]']
+
     if int(request_dict['message[add][0][created_at]']) + 10 < int(time.time()): return 'ok'
 
-    messages = [{"role": "system", "content": ggl.get_annotation()}]
+    messages = [{"role": "system", "content": misc.get_annotation()}]
+
     pipeline = amo.get_pipeline(image, name, text)
     print('Pipeline:', pipeline, 'ChatId:', user_id)
     if pipeline is None: return 'ok'
@@ -48,23 +40,21 @@ def main():
 
     db.add_message(user_id, text, 'user')
 
-    token, session = amo.get_token()
-    translation = translate_to_russian(text)
-    amo.send_notes(pipeline, session, translation)
+    translation = misc.translate_to_russian(text)
+    amo.send_notes(pipeline, translation)
     print('Q_T:', translation)
     messages += db.read_history(user_id)
 
     response = openai.ChatCompletion.create(
-        model='gpt-3.5-turbo',
+        model='gpt-4-32k',
         messages=messages
     )['choices'][0]['message']['content']
 
     db.add_message(user_id, response, 'assistant')
     amo.send_message(user_id, response)
-    token, session = amo.get_token()
     print('A:', response)
-    translation = translate_to_russian(response)
-    amo.send_notes(pipeline, session, translation)
+    translation = misc.translate_to_russian(response)
+    amo.send_notes(pipeline, translation)
     print('A_T:', translation)
     return 'ok'
 

@@ -61,7 +61,9 @@ def get_pipeline(image, s_name, text):
             return pipeline
     return None
 
-def send_notes(pipeline_id, session, text):
+def send_notes(pipeline_id, text):
+
+    _, session = get_token()
     url = f'https://chatgpt.amocrm.ru/private/notes/edit2.php?parent_element_id={pipeline_id}&parent_element_type=2'
     data = {
         'DATE_CREATE': int(time.time()),
