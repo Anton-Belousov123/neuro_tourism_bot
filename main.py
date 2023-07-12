@@ -46,7 +46,7 @@ def main():
     messages += db.read_history(user_id)
 
     response = openai.ChatCompletion.create(
-        model='gpt-4',
+        model='gpt-4-32k-0613',
         messages=messages
     )['choices'][0]['message']['content']
 
