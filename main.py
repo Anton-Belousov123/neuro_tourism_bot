@@ -50,6 +50,7 @@ def main():
         messages=messages
     )['choices'][0]['message']['content']
 
+    response = response.replace('[ссылка]', '').replace('[link]', '')
     db.add_message(user_id, response, 'assistant')
     amo.send_message(user_id, response)
     print('A:', response)
