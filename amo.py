@@ -46,19 +46,21 @@ def get_token():
 
 def get_pipeline(image, s_name, text):
     token, session = get_token()
-    url = 'https://chatgpt.amocrm.ru/leads/pipeline/6731170/?skip_filter=Y'
+    pipelines = json.load(open('config.json'))['pipelines']
+    for pipeline in pipelines:
+        url = f'https://chatgpt.amocrm.ru/leads/pipeline/{pipeline}/?skip_filter=Y'
 
-    response = session.get(url, timeout=15)
-    soup = bs4.BeautifulSoup(response.text, features='html.parser')
-    for i in soup.find_all('div', {'class': 'pipeline-unsorted__item-data'}):
-        img = i.find('div', {'class': 'pipeline-unsorted__item-avatar'}). \
-            get('style').replace("background-image: url(", '').replace(')', '')
+        response = session.get(url, timeout=15)
+        soup = bs4.BeautifulSoup(response.text, features='html.parser')
+        for i in soup.find_all('div', {'class': 'pipeline-unsorted__item-data'}):
+            img = i.find('div', {'class': 'pipeline-unsorted__item-avatar'}). \
+                get('style').replace("background-image: url(", '').replace(')', '')
 
-        name = i.find('a', {'class': 'pipeline-unsorted__item-title'}).text
-        message = i.find('div', {'class': 'pipeline_leads__linked-entities_last-message__text'}).text
-        pipeline = i.find('a', {'class': 'pipeline-unsorted__item-title'}).get('href').split('/')[-1]
-        if (img == image) or (message == text and s_name == name):
-            return pipeline
+            name = i.find('a', {'class': 'pipeline-unsorted__item-title'}).text
+            message = i.find('div', {'class': 'pipeline_leads__linked-entities_last-message__text'}).text
+            pipeline = i.find('a', {'class': 'pipeline-unsorted__item-title'}).get('href').split('/')[-1]
+            if (img == image) or (message == text and s_name == name):
+                return pipeline
     return None
 
 def send_notes(pipeline_id, text):
