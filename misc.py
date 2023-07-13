@@ -7,7 +7,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 def get_annotation(pipeline) -> str:
     scope = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
-    index = json.load(open('config.json')).index(pipeline) + 1
+    index = json.load(open('config.json'))['pipelines'].index(pipeline) + 1
     creds = ServiceAccountCredentials.from_json_keyfile_name('google.json', scope)
     client = gspread.authorize(creds)
     sheet = client.open('ЧАТ').sheet1
