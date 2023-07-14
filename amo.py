@@ -51,6 +51,7 @@ def get_pipeline(image, s_name, text):
     token, session = get_token()
     pipelines = json.load(open('config.json'))['pipelines']
     for pipeline in pipelines:
+        pip1 = pipeline
         url = f'https://chatgpt.amocrm.ru/leads/pipeline/{pipeline}/?skip_filter=Y'
 
         response = session.get(url, timeout=15)
@@ -63,7 +64,7 @@ def get_pipeline(image, s_name, text):
             message = i.find('div', {'class': 'pipeline_leads__linked-entities_last-message__text'}).text
             pipeline = i.find('a', {'class': 'pipeline-unsorted__item-title'}).get('href').split('/')[-1]
             if (img == image) or (message == text and s_name == name):
-                return pipeline
+                return pipeline, pip1
     return None
 
 def send_notes(pipeline_id, text):

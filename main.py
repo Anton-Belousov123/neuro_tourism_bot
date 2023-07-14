@@ -28,7 +28,7 @@ def main():
 
     if int(request_dict['message[add][0][created_at]']) + 10 < int(time.time()): return 'ok'
     print('success')
-    pipeline = amo.get_pipeline(image, name, text)
+    pipeline, pipeline_name = amo.get_pipeline(image, name, text)
 
     print('Pipeline:', pipeline, 'ChatId:', user_id)
     if pipeline is None: return 'ok'
@@ -38,7 +38,7 @@ def main():
         return 'ok'
 
 
-    messages = [{"role": "system", "content": misc.get_annotation(pipeline)}]
+    messages = [{"role": "system", "content": misc.get_annotation(pipeline_name)}]
 
     db.add_message(user_id, text, 'user')
 
