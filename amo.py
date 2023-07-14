@@ -9,9 +9,10 @@ import requests
 def get_token():
     mail = 'business-robots@yandex.ru'
     host = 'https://chatgpt.amocrm.ru/'
+    password = "Xh1wdBlk"
     try:
         session = requests.Session()
-        response = session.get('https://kevgenev8.amocrm.ru/')
+        response = session.get(host)
         session_id = response.cookies.get('session_id')
         csrf_token = response.cookies.get('csrf_token')
         headers = {
@@ -20,14 +21,14 @@ def get_token():
             'Cookie': f'session_id={session_id}; '
                       f'csrf_token={csrf_token};'
                       f'last_login={mail}',
-            'Host': host,
+            'Host': host.replace('https://', '').replace('/', ''),
             'Origin': host,
             'Referer': host,
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36'
         }
         payload = {
             'csrf_token': csrf_token,
-            'password': "Xh1wdBlk",
+            'password': password,
             'temporary_auth': "N",
             'username': mail}
 
@@ -95,3 +96,4 @@ def send_message(receiver_id: str, message: str, token=''):
             token, session = get_token()
             continue
         break
+
