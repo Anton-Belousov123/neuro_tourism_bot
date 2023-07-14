@@ -11,6 +11,7 @@ def get_annotation(pipeline) -> str:
     creds = ServiceAccountCredentials.from_json_keyfile_name('google.json', scope)
     client = gspread.authorize(creds)
     sheet = client.open('ЧАТ').sheet1
+    print('Используемая строка:', index)
     return sheet.cell(index, 2).value
 
 
