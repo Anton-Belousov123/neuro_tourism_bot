@@ -7,6 +7,8 @@ import requests
 
 
 def get_token():
+    mail = 'business-robots@yandex.ru'
+    host = 'https://chatgpt.amocrm.ru/'
     try:
         session = requests.Session()
         response = session.get('https://kevgenev8.amocrm.ru/')
@@ -17,25 +19,25 @@ def get_token():
             'X-Requested-With': 'XMLHttpRequest',
             'Cookie': f'session_id={session_id}; '
                       f'csrf_token={csrf_token};'
-                      f'last_login=kevgenev8@mail.ru',
-            'Host': 'kevgenev8.amocrm.ru',
-            'Origin': 'https://kevgenev8.amocrm.ru',
-            'Referer': 'https://kevgenev8.amocrm.ru/',
+                      f'last_login={mail}',
+            'Host': host,
+            'Origin': host,
+            'Referer': host,
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36'
         }
         payload = {
             'csrf_token': csrf_token,
             'password': "Xh1wdBlk",
             'temporary_auth': "N",
-            'username': "kevgenev8@mail.ru"}
+            'username': mail}
 
-        response = session.post('https://kevgenev8.amocrm.ru/oauth2/authorize', headers=headers, data=payload)
+        response = session.post(f'{host}oauth2/authorize', headers=headers, data=payload)
         access_token = response.cookies.get('access_token')
         refresh_token = response.cookies.get('refresh_token')
         headers['access_token'], headers['refresh_token'] = access_token, refresh_token
         payload = {'request[chats][session][action]': 'create'}
         headers['Host'] = 'chatgpt.amocrm.ru'
-        response = session.post('https://kevgenev8.amocrm.ru/ajax/v1/chats/session', headers=headers, data=payload)
+        response = session.post(f'{host}ajax/v1/chats/session', headers=headers, data=payload)
         token = response.json()['response']['chats']['session']['access_token']
     except Exception as e:
         print(e)
