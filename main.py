@@ -27,7 +27,7 @@ def main():
         image = request_dict['message[add][0][author][avatar_url]']
 
     if int(request_dict['message[add][0][created_at]']) + 10 < int(time.time()): return 'ok'
-
+    print('success')
     pipeline = amo.get_pipeline(image, name, text)
 
     print('Pipeline:', pipeline, 'ChatId:', user_id)
