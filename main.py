@@ -32,7 +32,7 @@ def main():
     if 'message[add][0][author][avatar_url]' in request_dict.keys():
         image = request_dict['message[add][0][author][avatar_url]']
 
-    if int(request_dict['message[add][0][created_at]']) + 10 < int(time.time()): return 'ok'
+    #if int(request_dict['message[add][0][created_at]']) + 10 < int(time.time()): return 'ok'
     print('success')
     pipeline, pipeline_name = amo.get_pipeline(image, name, text)
 
