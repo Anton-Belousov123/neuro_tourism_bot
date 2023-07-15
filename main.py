@@ -23,9 +23,6 @@ def main():
     print(request_dict)
     name, text, image = request_dict['message[add][0][author][name]'], request_dict['message[add][0][text]'], ''
 
-    if 'message[add][0][attachment][link]' in request_dict.keys():
-        print('Voice message detected!')
-        text = misc.wisper_detect(request_dict['message[add][0][attachment][link]'])
 
     print('Q:', text)
     user_id = request_dict['message[add][0][chat_id]']
@@ -34,6 +31,10 @@ def main():
 
     if int(request_dict['message[add][0][created_at]']) + 30 < int(time.time()): return 'ok'
     print('success')
+    if 'message[add][0][attachment][link]' in request_dict.keys():
+        print('Voice message detected!')
+        text = misc.wisper_detect(request_dict['message[add][0][attachment][link]'])
+
     pipeline, pipeline_name = amo.get_pipeline(image, name, text)
 
     print('Pipeline:', pipeline, 'ChatId:', user_id)
