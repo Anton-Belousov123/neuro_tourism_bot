@@ -22,6 +22,11 @@ def main():
     request_dict = request.form.to_dict()
     print(request_dict)
     name, text, image = request_dict['message[add][0][author][name]'], request_dict['message[add][0][text]'], ''
+
+    if 'message[add][0][attachment][link]' in request_dict.keys():
+        print('Voice message detected!')
+        text = misc.wisper_detect(request_dict['message[add][0][attachment][link]'])
+
     print('Q:', text)
     user_id = request_dict['message[add][0][chat_id]']
     if 'message[add][0][author][avatar_url]' in request_dict.keys():
