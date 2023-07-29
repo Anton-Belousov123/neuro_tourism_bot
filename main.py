@@ -1,4 +1,5 @@
 import time
+from datetime import datetime
 
 import openai
 import os
@@ -19,7 +20,7 @@ def main():
     request_dict = request.form.to_dict()
     print(request_dict)
     name, text, image = request_dict['message[add][0][author][name]'], request_dict['message[add][0][text]'], ''
-
+    time_string = datetime.fromtimestamp(int(request_dict['message[add][0][created_at]'])).strftime('%d.%m.%Y %H:%m')
     print('Q:', text)
     user_id = request_dict['message[add][0][chat_id]']
     if 'message[add][0][author][avatar_url]' in request_dict.keys():
@@ -31,7 +32,7 @@ def main():
         print('Voice message detected!')
         text = misc.wisper_detect(request_dict['message[add][0][attachment][link]'])
 
-    pipeline, pipeline_name = amo.get_pipeline(image, name, text)
+    pipeline, pipeline_name = amo.get_pipeline(image, name, text, time_string)
 
     print('Pipeline:', pipeline, 'ChatId:', user_id)
     if pipeline is None: return 'ok'
