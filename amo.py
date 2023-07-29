@@ -47,6 +47,7 @@ def get_token():
     print('Amo Token:', token)
     return token, session
 
+
 def get_pipeline(image, s_name, text):
     token, session = get_token()
     pipelines = json.load(open('config.json'))['pipelines']
@@ -59,7 +60,8 @@ def get_pipeline(image, s_name, text):
         for i in soup.find_all('div', {'class': 'pipeline-unsorted__item-data'}):
             img = i.find('div', {'class': 'pipeline-unsorted__item-avatar'}). \
                 get('style').replace("background-image: url(", '').replace(')', '')
-
+            message_time = i.find('div', {'class': 'pipeline-unsorted__item-date'}).text
+            print(message_time)
             name = i.find('a', {'class': 'pipeline-unsorted__item-title'}).text
             message = i.find('div', {'class': 'pipeline_leads__linked-entities_last-message__text'}).text
             pipeline = i.find('a', {'class': 'pipeline-unsorted__item-title'}).get('href').split('/')[-1]
@@ -67,8 +69,8 @@ def get_pipeline(image, s_name, text):
                 return pipeline, pip1
     return None
 
-def send_notes(pipeline_id, text):
 
+def send_notes(pipeline_id, text):
     _, session = get_token()
     url = f'https://chatgpt.amocrm.ru/private/notes/edit2.php?parent_element_id={pipeline_id}&parent_element_type=2'
     data = {
@@ -79,7 +81,6 @@ def send_notes(pipeline_id, text):
         'ELEMENT_TYPE': '2'
     }
     resp = session.post(url, data=data)
-
 
 
 def send_message(receiver_id: str, message: str, token=''):
@@ -97,4 +98,3 @@ def send_message(receiver_id: str, message: str, token=''):
             token, session = get_token()
             continue
         break
-
