@@ -61,11 +61,11 @@ def get_pipeline(image, s_name, text, time_string):
             img = i.find('div', {'class': 'pipeline-unsorted__item-avatar'}). \
                 get('style').replace("background-image: url(", '').replace(')', '')
             message_time = i.find('div', {'class': 'pipeline-unsorted__item-date'}).text
-            print(time_string, message_time)
+
             name = i.find('a', {'class': 'pipeline-unsorted__item-title'}).text
             message = i.find('div', {'class': 'pipeline_leads__linked-entities_last-message__text'}).text
             pipeline = i.find('a', {'class': 'pipeline-unsorted__item-title'}).get('href').split('/')[-1]
-            if (img == image and time_string == message_time) or (message == text and s_name == name and time_string == message_time):
+            if (img == image) or (message == text and s_name == name):
                 return pipeline, pip1
     return None
 
