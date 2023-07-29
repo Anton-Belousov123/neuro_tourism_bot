@@ -18,6 +18,15 @@ app = Flask(__name__)
 @app.route('/', methods=["POST"])
 def main():
     request_dict = request.form.to_dict()
+    if 'unsorted[add][0][pipeline_id]' in request_dict.keys():
+        print('Новый клиент')
+    elif 'leads[update][0][pipeline_id]' in request_dict.keys():
+        print('Обновление Pipeline')
+    elif 'leads[delete][0][pipeline_id]' in request_dict.keys():
+        print('Удаление сделки')
+    else:
+        print('Обычное сообщение')
+
     print(request_dict)
     return 'ok'
     name, text, image = request_dict['message[add][0][author][name]'], request_dict['message[add][0][text]'], ''
