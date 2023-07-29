@@ -34,7 +34,7 @@ def main():
 
     pipeline, pipeline_name = amo.get_pipeline(image, name, text, time_string)
 
-    print('Pipeline:', pipeline, 'ChatId:', user_id)
+    print('Pipeline:', pipeline, 'ChatId:', user_id, 'Pipeline_name', pipeline_name)
     if pipeline is None: return 'ok'
 
     if text == '/restart':

@@ -67,7 +67,10 @@ def get_pipeline(image, s_name, text, time_string):
             pipeline = i.find('a', {'class': 'pipeline-unsorted__item-title'}).get('href').split('/')[-1]
             if (img == image) or (message == text and s_name == name):
                 return pipeline, pip1
-    return None
+    return None  # message[add][0][entity_id] || message[add][0][element_id]
+
+# Для leads[update][0][id] поставлен статус leads[update][0][status_id] в leads[update][0][pipeline_id]
+
 
 
 def send_notes(pipeline_id, text):
