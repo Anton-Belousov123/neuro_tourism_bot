@@ -19,6 +19,7 @@ app = Flask(__name__)
 def main():
     request_dict = request.form.to_dict()
     print(request_dict)
+    return 'ok'
     name, text, image = request_dict['message[add][0][author][name]'], request_dict['message[add][0][text]'], ''
     time_string = datetime.fromtimestamp(int(request_dict['message[add][0][created_at]'])).strftime('%d.%m.%Y %H:%m')
     print('Q:', text)
