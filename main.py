@@ -48,7 +48,7 @@ def main():
         text = misc.wisper_detect(request_dict['message[add][0][attachment][link]'])
 
     bred = json.load(open('send_db.json', 'r', encoding='UTF-8'))
-    pipeline, pipeline_name = bred[request_dict['message[add][0][entity_id]']], request_dict['message[add][0][entity_id]']
+    pipeline, pipeline_name = request_dict['message[add][0][entity_id]'], bred[request_dict['message[add][0][entity_id]']]
 
     print('Pipeline:', pipeline, 'ChatId:', user_id, 'Pipeline_name', pipeline_name)
     if pipeline is None: return 'ok'
