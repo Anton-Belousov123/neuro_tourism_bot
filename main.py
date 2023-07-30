@@ -81,7 +81,7 @@ def main():
     amo.send_notes(pipeline, translation)
     print('Q_T:', translation)
     messages += db.read_history(user_id)
-
+    print(messages)
     response = openai.ChatCompletion.create(
         model='gpt-3.5-turbo-16k',
         messages=messages
