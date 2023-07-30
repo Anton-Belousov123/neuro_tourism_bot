@@ -28,6 +28,8 @@ def main():
         print('Новый клиент')
         return 'ok'
     elif 'leads[update][0][pipeline_id]' in request_dict.keys():
+        print(request_dict)
+        return 'ok'
         print('Обновление Pipeline')
         db1 = json.load(open('db.json', 'r', encoding='UTF-8'))
         db1[request_dict['leads[update][0][id]']] = []
