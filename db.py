@@ -14,7 +14,8 @@ def add_message(id: str, message: str, role: str):
     if id not in content.keys():
         content[id] = []
     content[id].append({'role': role, 'content': message})
-    print(type(id))
+    print('writing', message, 'to', id)
+    print(content)
     with open('db.json', mode='w', encoding='UTF-8') as f:
         f.write(json.dumps(content))
     f.close()
