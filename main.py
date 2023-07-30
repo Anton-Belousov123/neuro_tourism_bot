@@ -55,6 +55,7 @@ def main():
     text = request_dict['message[add][0][text]']
     print('Q:', text)
     user_id = request_dict['message[add][0][entity_id]']
+    user_id_hash = request_dict['message[add][0][chat_id]']
     if int(request_dict['message[add][0][created_at]']) + 30 < int(time.time()): return 'ok'
     print('success')
     if 'message[add][0][attachment][link]' in request_dict.keys():
@@ -88,7 +89,7 @@ def main():
 
     response = response.replace('[ссылка]', '').replace('[link]', '')
     db.add_message(user_id, response, 'assistant')
-    amo.send_message(user_id, response)
+    amo.send_message(user_id_hash, response)
     print('A:', response)
     translation = misc.translate_to_russian(response)
     amo.send_notes(pipeline, translation)
