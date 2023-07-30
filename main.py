@@ -50,7 +50,6 @@ def main():
         return 'ok'
     else:
         print('Обычное сообщение')
-    return 'ok'
     text = request_dict['message[add][0][text]']
     print('Q:', text)
     user_id = request_dict['message[add][0][entity_id]']
