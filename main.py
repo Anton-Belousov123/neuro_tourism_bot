@@ -29,7 +29,7 @@ def main():
         return 'ok'
     elif 'leads[update][0][pipeline_id]' in request_dict.keys():
         print('Обновление Pipeline')
-
+        print(request_dict)
         fl = False
         db1 = json.load(open('users_db.json', 'r', encoding='UTF-8'))
         try:
@@ -50,10 +50,10 @@ def main():
         return 'ok'
     else:
         print('Обычное сообщение')
-
+    return 'ok'
     text = request_dict['message[add][0][text]']
     print('Q:', text)
-    user_id_old = str(request_dict['message[add][0][entity_id]'])
+    user_id = request_dict['message[add][0][entity_id]']
     user_id_hash = request_dict['message[add][0][chat_id]']
     if int(request_dict['message[add][0][created_at]']) + 30 < int(time.time()): return 'ok'
     print('success')
@@ -65,21 +65,21 @@ def main():
     pipeline, pipeline_name = request_dict['message[add][0][entity_id]'], bred[
         request_dict['message[add][0][entity_id]']]
 
-    print('Pipeline:', pipeline, 'ChatId:', user_id_old, 'Pipeline_name', pipeline_name)
+    print('Pipeline:', pipeline, 'ChatId:', user_id, 'Pipeline_name', pipeline_name)
     if pipeline is None: return 'ok'
 
     if text == '/restart':
-        db.clear_history(user_id_old)
+        db.clear_history(user_id)
         return 'ok'
 
     messages = [{"role": "system", "content": misc.get_annotation(pipeline_name)}]
 
-    db.add_message(user_id_old, text, 'user')
+    db.add_message(user_id, text, 'user')
 
     translation = misc.translate_to_russian(text)
     amo.send_notes(pipeline, translation)
     print('Q_T:', translation)
-    messages += db.read_history(user_id_old)
+    messages += db.read_history(user_id)
     print('Message history length:', len(messages))
     response = openai.ChatCompletion.create(
         model='gpt-3.5-turbo-16k',
@@ -87,7 +87,7 @@ def main():
     )['choices'][0]['message']['content']
 
     response = response.replace('[ссылка]', '').replace('[link]', '')
-    db.add_message(user_id_old, response, 'assistant')
+    db.add_message(user_id, response, 'assistant')
     amo.send_message(user_id_hash, response)
     print('A:', response)
     translation = misc.translate_to_russian(response)
