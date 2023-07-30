@@ -20,19 +20,24 @@ app = Flask(__name__)
 def main():
     request_dict = request.form.to_dict()
     if 'unsorted[add][0][pipeline_id]' in request_dict.keys():
-        db1 = json.load(open('send_db.json', 'r', encoding='UTF-8'))
+        db1 = json.load(open('users_db.json', 'r', encoding='UTF-8'))
         db1[request_dict['unsorted[add][0][lead_id]']] = request_dict['unsorted[add][0][pipeline_id]']
-        with open('send_db.json', 'w', encoding='UTF-8') as f:
+        with open('users_db.json', 'w', encoding='UTF-8') as f:
             f.write(json.dumps(db1))
         f.close()
         print('Новый клиент')
         return 'ok'
     elif 'leads[update][0][pipeline_id]' in request_dict.keys():
         print('Обновление Pipeline')
-        print(request_dict)
-        db1 = json.load(open('send_db.json', 'r', encoding='UTF-8'))
+        db1 = json.load(open('db.json', 'r', encoding='UTF-8'))
+        db1[request_dict['leads[update][0][id]']] = []
+        with open('db.json', 'w', encoding='UTF-8') as f:
+            f.write(json.dumps(db1))
+        f.close()
+
+        db1 = json.load(open('users_db.json', 'r', encoding='UTF-8'))
         db1[request_dict['leads[update][0][id]']] = request_dict['leads[update][0][pipeline_id]']
-        with open('send_db.json', 'w', encoding='UTF-8') as f:
+        with open('users_db.json', 'w', encoding='UTF-8') as f:
             f.write(json.dumps(db1))
         f.close()
         return 'ok'
@@ -41,15 +46,16 @@ def main():
 
     text = request_dict['message[add][0][text]']
     print('Q:', text)
-    user_id = request_dict['message[add][0][chat_id]']
+    user_id = request_dict['message[add][0][entity_id]']
     if int(request_dict['message[add][0][created_at]']) + 30 < int(time.time()): return 'ok'
     print('success')
     if 'message[add][0][attachment][link]' in request_dict.keys():
         print('Voice message detected!')
         text = misc.wisper_detect(request_dict['message[add][0][attachment][link]'])
 
-    bred = json.load(open('send_db.json', 'r', encoding='UTF-8'))
-    pipeline, pipeline_name = request_dict['message[add][0][entity_id]'], bred[request_dict['message[add][0][entity_id]']]
+    bred = json.load(open('users_db.json', 'r', encoding='UTF-8'))
+    pipeline, pipeline_name = request_dict['message[add][0][entity_id]'], bred[
+        request_dict['message[add][0][entity_id]']]
 
     print('Pipeline:', pipeline, 'ChatId:', user_id, 'Pipeline_name', pipeline_name)
     if pipeline is None: return 'ok'
