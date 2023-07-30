@@ -47,7 +47,6 @@ def main():
             with open('db.json', 'w', encoding='UTF-8') as f:
                 f.write(json.dumps(db1))
             f.close()
-
         return 'ok'
     else:
         print('Обычное сообщение')
