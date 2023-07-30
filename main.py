@@ -33,7 +33,7 @@ def main():
         fl = False
         db1 = json.load(open('users_db.json', 'r', encoding='UTF-8'))
         try:
-            if request_dict['leads[update][0][pipeline_id]'] == db1[request_dict['leads[update][0][id]']]:
+            if request_dict['leads[update][0][pipeline_id]'] != db1[request_dict['leads[update][0][id]']]:
                 fl = True
         except:
             fl = True
