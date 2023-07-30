@@ -29,6 +29,7 @@ def main():
         return 'ok'
     elif 'leads[update][0][pipeline_id]' in request_dict.keys():
         print('Обновление Pipeline')
+        print(request_dict)
         db1 = json.load(open('send_db.json', 'r', encoding='UTF-8'))
         db1[request_dict['leads[update][0][id]']] = request_dict['leads[update][0][pipeline_id]']
         with open('send_db.json', 'w', encoding='UTF-8') as f:
