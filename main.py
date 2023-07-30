@@ -28,20 +28,26 @@ def main():
         print('Новый клиент')
         return 'ok'
     elif 'leads[update][0][pipeline_id]' in request_dict.keys():
-        print(request_dict)
-        return 'ok'
         print('Обновление Pipeline')
-        db1 = json.load(open('db.json', 'r', encoding='UTF-8'))
-        db1[request_dict['leads[update][0][id]']] = []
-        with open('db.json', 'w', encoding='UTF-8') as f:
-            f.write(json.dumps(db1))
-        f.close()
 
+        fl = False
         db1 = json.load(open('users_db.json', 'r', encoding='UTF-8'))
+        try:
+            if request_dict['leads[update][0][pipeline_id]'] == db1[request_dict['leads[update][0][id]']]:
+                fl = True
+        except:
+            fl = True
         db1[request_dict['leads[update][0][id]']] = request_dict['leads[update][0][pipeline_id]']
         with open('users_db.json', 'w', encoding='UTF-8') as f:
             f.write(json.dumps(db1))
         f.close()
+        if fl:
+            db1 = json.load(open('db.json', 'r', encoding='UTF-8'))
+            db1[request_dict['leads[update][0][id]']] = []
+            with open('db.json', 'w', encoding='UTF-8') as f:
+                f.write(json.dumps(db1))
+            f.close()
+
         return 'ok'
     else:
         print('Обычное сообщение')
