@@ -35,6 +35,8 @@ def get_token():
         response = session.post(f'{host}oauth2/authorize', headers=headers, data=payload)
         access_token = response.cookies.get('access_token')
         refresh_token = response.cookies.get('refresh_token')
+        print(access_token)
+        print(refresh_token)
         headers['access_token'], headers['refresh_token'] = access_token, refresh_token
         payload = {'request[chats][session][action]': 'create'}
         headers['Host'] = 'chatgpt.amocrm.ru'
@@ -101,3 +103,7 @@ def send_message(receiver_id: str, message: str, token=''):
             token, session = get_token()
             continue
         break
+
+
+
+get_token()

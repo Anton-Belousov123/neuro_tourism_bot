@@ -19,6 +19,7 @@ app = Flask(__name__)
 @app.route('/', methods=["POST"])
 def main():
     request_dict = request.form.to_dict()
+    print(request_dict)
     if 'unsorted[add][0][pipeline_id]' in request_dict.keys():
         db1 = json.load(open('users_db.json', 'r', encoding='UTF-8'))
         db1[request_dict['unsorted[add][0][lead_id]']] = request_dict['unsorted[add][0][pipeline_id]']
@@ -28,6 +29,8 @@ def main():
         print('Новый клиент')
         return 'ok'
     elif 'leads[update][0][pipeline_id]' in request_dict.keys():
+        if int(request_dict['leads[update][0][updated_at]']) + 5 < int(time.time()): return 'ok'
+
         print('Обновление Pipeline')
         print(request_dict)
         fl = False
@@ -97,3 +100,9 @@ def main():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8000)
+
+
+"""
+{'account[subdomain]': 'chatgpt', 'account[id]': '31023146', 'account[_links][self]': 'https://chatgpt.amocrm.ru', 'leads[update][0][id]': '12389431', 'leads[update][0][name]': '', 'leads[update][0][status_id]': '58854670', 'leads[update][0][old_status_id]': '58854638', 'leads[update][0][price]': '0', 'leads[update][0][responsible_user_id]': '9538514', 'leads[update][0][last_modified]': '1692721528', 'leads[update][0][modified_user_id]': '9538514', 'leads[update][0][created_user_id]': '0', 'leads[update][0][date_create]': '1692283475', 'leads[update][0][pipeline_id]': '7012970', 'leads[update][0][account_id]': '31023146', 'leads[update][0][created_at]': '1692283475', 'leads[update][0][updated_at]': '1692721528'}
+88.212.240.28 - - [22/Aug/2023 19:25:29] "POST / HTTP/1.1" 200 -
+"""
